@@ -208,3 +208,7 @@ __marimo__/
 
 #JetBrains
 .idea/
+
+# Project
+input_data/*
+output_data/sorted/*
