@@ -7,6 +7,8 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 
 # Tworzenie prawie posortowanej listy
 # Bierze posortowaną, zamienia losowo swaps elementów
+# TODO
+# swapowanie 10% pliku, nie stalej liczby
 def nearly_sorted(arr, swaps=5):
     arr = arr.copy()    # Tworzy kopię listy
     n = len(arr)

@@ -1,12 +1,25 @@
 # Source: https://www.geeksforgeeks.org/dsa/merge-sort/
 import time
 from pathlib import Path
-from sort_utils import save_to_file, format_size
 
 # Załadowanie danych z plików
-def load_data(path):
+def load_data(path, data_type):
     with open(path, "r", encoding="utf-8") as f:
-        return [int(line.strip()) for line in f]    # Zwracanie linii (usunięte znaki białe; jako int); str() dla stringow, int() dla numeric
+        if data_type == "numeric":
+            return [int(line.strip()) for line in f]
+        else:
+            return [line.strip() for line in f]
+
+# Zapis posortowanej tablicy do pliku tekstowego
+def save_sorted_array(path, arr):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        for x in arr:
+            f.write(str(x) + "\n")
+
+# =========================
+# Merge sort rekurencyjny
+# =========================
 
 # Zcalanie dwóch posortowanych części tablicy
 def merge(arr, left, mid, right):
@@ -64,39 +77,47 @@ def merge_sort(arr, left, right):
         merge_sort(arr, mid + 1, right) # Rekurencyjnie wywołuje merge_sort() dla prawej części tablicy; mid+1 jest początkiem, right końcem
         merge(arr, left, mid, right)    # Scalanie
 
-def save_sorted_array(path, arr):
-    with open(path, "w", encoding="utf-8") as f:
-        for x in arr:
-            f.write(str(x) + "\n")
 
+# Main
 if __name__ == "__main__":
-    BASE_DIR = Path(__file__).resolve().parents[1]  # Katalog główny
+    BASE_DIR = Path(__file__).resolve().parents[1] # Katalog główny
+    input_root = BASE_DIR / "input_data"           # Ścieżka wejściowa
+    output_root = BASE_DIR / "output_data"         # Ścieżka wyjściowa
 
-    input_dir = BASE_DIR / "input_data" / "numeric"                 # Ścieżka wejściowa
-    output_file = BASE_DIR / "output_data" / "results_numeric.csv"  # Ścieżka wyjściowa
+    # Iterowanie po podkatalogach
+    for data_dir in sorted(input_root.iterdir()):
+        if not data_dir.is_dir():
+            continue
 
-    # Tworzenie folderu, jeśli nie istnieje
-    output_file.parent.mkdir(parents=True, exist_ok=True)
+        txt_files = list(data_dir.glob("*.txt"))
+        if not txt_files:
+            continue  # pomijamy puste foldery
 
-    # Zapisanie wyniku w postaci:
-    # data_type_100-000; 2.0000
-    with open(output_file, "w", encoding="utf-8") as out:
-        out.write("file_name;time\n")   # Nagłówek CSV
+        data_type = data_dir.name   # Identyfikacja typu danych
+        print(f"\n=== Processing data type: {data_type} ===")
 
-        # Iterowanie po wszystkich plikach w folderze
-        for file_path in sorted(input_dir.glob("*.txt")):
-            print(f"Processing {file_path.name}")
+        # Pliki wynikowe dla danego typu danych
+        results_csv = output_root / f"results-{data_type}.csv"
+        sorted_dir = output_root / f"sorted_{data_type}"
 
-            arr = load_data(file_path)  # Wczytywanie danych z pliku do tablicy
+        # Zapisanie wyniku w postaci:
+        # data_type_100-000; 2.0000
+        with open(results_csv, "w", encoding="utf-8") as out:
+            out.write("file_name;time\n")   # Nagłówek pliku CSV
 
-            start = time.perf_counter() # Pomiar czasu przed rozpoczęciem sortowania
-            merge_sort(arr, 0, len(arr) - 1)    # Sortowanie
-            end = time.perf_counter()   # Pomiar czasu po zakończeniu sortowania
+            # Iteracja po pliku z danymi; wczytywanie danych
+            for file_path in sorted(txt_files):
+                print(f"  Sorting {file_path.name}")
 
-            elapsed = end - start   # Czas sortowania w sekundach
+                arr = load_data(file_path, data_type)   # Wczytywanie danych z pliku do tablicy
 
-            out.write(f"{file_path.name};{elapsed:.6f}\n")  # Zapis wyniku do pliku
+                start = time.perf_counter()             # Pomiar czasu przed rozpoczęciem sortowania
+                merge_sort(arr, 0, len(arr) - 1)
+                end = time.perf_counter()               # Pomiar czasu po zakończeniu sortowania
 
-            # zapis posortowanej tablicy
-            relative_path = f"output_data/sorted_numeric/sorted_{file_path.name}"
-            save_to_file(relative_path, arr)
+                elapsed = end - start   # Czas sortowania w sekundach
+                out.write(f"{file_path.name};{elapsed:.6f}\n")  # Zapis wyniku do pliku
+
+                # zapis posortowanej tablicy
+                sorted_path = sorted_dir / f"sorted_{file_path.name}"
+                save_sorted_array(sorted_path, arr)
