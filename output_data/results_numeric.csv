@@ -1,0 +1,13 @@
+file_name;time
+nearly_reverse_1-000-000.txt;2.949861
+nearly_reverse_10-000-000.txt;34.498447
+nearly_reverse_100-000.txt;0.360029
+nearly_sorted_1-000-000.txt;2.986548
+nearly_sorted_10-000-000.txt;34.416519
+nearly_sorted_100-000.txt;0.255756
+random_1-000-000.txt;3.671143
+random_10-000-000.txt;45.868404
+random_100-000.txt;0.290435
+reverse_1-000-000.txt;2.860310
+reverse_10-000-000.txt;32.847131
+reverse_100-000.txt;0.258704
