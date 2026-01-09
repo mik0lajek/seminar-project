@@ -74,11 +74,9 @@ if __name__ == "__main__":
 
     input_dir = BASE_DIR / "input_data" / "numeric"                 # Ścieżka wejściowa
     output_file = BASE_DIR / "output_data" / "results_numeric.csv"  # Ścieżka wyjściowa
-    sorted_output_file = BASE_DIR / "output_data/sorted_numeric/"
 
     # Tworzenie folderu, jeśli nie istnieje
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    sorted_output_file.parent.mkdir(parents=True, exist_ok=True)
 
     # Zapisanie wyniku w postaci:
     # data_type_100-000; 2.0000
@@ -100,5 +98,5 @@ if __name__ == "__main__":
             out.write(f"{file_path.name};{elapsed:.6f}\n")  # Zapis wyniku do pliku
 
             # zapis posortowanej tablicy
-            relative_path = f"output_data/sorted/sorted_{file_path.name}"
+            relative_path = f"output_data/sorted_numeric/sorted_{file_path.name}"
             save_to_file(relative_path, arr)
