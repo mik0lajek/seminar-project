@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     input_dir = BASE_DIR / "input_data" / "numeric"                 # Ścieżka wejściowa
     output_file = BASE_DIR / "output_data" / "results_numeric.csv"  # Ścieżka wyjściowa
-    sorted_output_file = BASE_DIR / "output_data/sorted" / "results_numeric.csv"
+    sorted_output_file = BASE_DIR / "output_data/sorted_numeric/"
 
     # Tworzenie folderu, jeśli nie istnieje
     output_file.parent.mkdir(parents=True, exist_ok=True)
